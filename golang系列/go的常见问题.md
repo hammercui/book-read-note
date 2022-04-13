@@ -10,20 +10,25 @@
 
 
 
-5 网络io等待队列？
+### 5 网络io等待队列？
 > io input,output,输入输出，信息交换的流程。
 五种io模型：
-* 阻塞io:应用进程向内核发起recfrom请求数据，准备数据报，进程阻塞，从内核复制数据到进程，解除阻塞。
-* 非阻塞io:应用向内核recfrom申请时，缓冲区没有数据，直接返回应用，应用不断尝试。
-* io复用模型：进程将多个fd传递给select，阻塞，等待fd就绪；就绪后通知进程调用recfrom函数，读取数据。核心是一个线程监控多个fd,减少线程分配。
-* 信号驱动模型：
+* 阻塞io(BIO):应用进程向内核发起recfrom请求数据，准备数据报，进程阻塞，从内核复制数据到进程，解除阻塞。
+* 非阻塞io(NIO):应用向内核recfrom申请时，缓冲区没有数据，直接返回应用，应用不断尝试。
+* io复用模型()：进程将多个fd传递给select，阻塞，等待fd就绪；就绪后通知进程调用recfrom函数，读取数据。核心是一个线程监控多个fd,减少线程分配。
+    可同时监控多个fd的函数，就是slect,poll,epoll函数。
+    两类线程职能：
+    询问线程：select函数监控fd是否有数据
+    receiver线程： 询问线程通知去tcp缓冲区拉取数据
+* 信号驱动模型：由主动轮询换为被动接受信号，减少大量无效轮询。
+* 异步io: 发起read请求，由tcp缓冲区从内核态拷贝入用户态，通知应用线程。异步io天生就是非阻塞的，因为发起read请求后直接就返回了，不会阻塞后续指令。
 
 参考：
 * [epoll nio区别_一篇文章带你彻底搞懂NIO](https://blog.csdn.net/weixin_39888943/article/details/112014207)
 * [通俗理解BIO NIO select epoll并图解举例](https://cloud.tencent.com/developer/article/1773847)
 * [bio,nio,aio的区别 select,poll,epoll的区别](https://www.cnblogs.com/eryun/p/12040508.html)
 * [深入理解NIO select&epoll](https://zhuanlan.zhihu.com/p/150635981)
-* [100%弄明白5种IO模型](100%弄明白5种IO模型)
+* [100%弄明白5种IO模型]([100%弄明白5种IO模型](https://zhuanlan.zhihu.com/p/115912936))
 * [5种网络IO模型](https://zhuanlan.zhihu.com/p/54580385)
 
 6 读写屏障
