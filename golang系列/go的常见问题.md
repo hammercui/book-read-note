@@ -50,6 +50,8 @@ epoll： 改进型的poll,epoll只是返回IO活跃的Socket连接。用户进�
 
 8 并发actor模型与csp（Communicating Sequential Processes）
 >相同点都是通过消息传递来共享内存，并不会产生数据竞争。
+
+
 ## 参考
 
 [Golang 垃圾回收剖析](http://legendtkl.com/2017/04/28/golang-gc/)
