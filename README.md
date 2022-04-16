@@ -2,5 +2,5 @@
 
 ## 目录
 
-+ golang犀利
++ golang系列
   - go的常见问题
