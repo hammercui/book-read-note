@@ -8,7 +8,7 @@
 3. 节点复制 copying: java也用到了，只要是分代回收，不连续分配，在代划分时都会用到copy
 4. 分代回收：比如java。
 
-
+[Golang 垃圾回收剖析](http://legendtkl.com/2017/04/28/golang-gc/)
 
 ### 5 网络io等待队列？
 > io input,output,输入输出，信息交换的流程。
@@ -42,16 +42,33 @@ epoll： 改进型的poll,epoll只是返回IO活跃的Socket连接。用户进�
 * [100%弄明白5种IO模型]([100%弄明白5种IO模型](https://zhuanlan.zhihu.com/p/115912936))
 * [5种网络IO模型](https://zhuanlan.zhihu.com/p/54580385)
 
-6 读写屏障
-7 map的实现，sync.map的实现，map实现随机的方法
+### 6 读写屏障
+### 7 map的实现，sync.map的实现，map实现随机的方法
 
 大部分在《go语言设计与实现里》
 
 
-8 并发actor模型与csp（Communicating Sequential Processes）
+### 8 并发actor模型与csp（Communicating Sequential Processes）
 >相同点都是通过消息传递来共享内存，并不会产生数据竞争。
 
+* 每个actor都携带mailbox,负责消息传递，隔离了方法调用。actor自己维护状态，规避了锁和线程问题。
+* actor需要借助强大的路由系统，实现分布式。
+* 容错机制，因为每个actor物理隔离，不需要防御式编程，任其崩溃。
 
-## 参考
+缺点：
+* actor分散问题，分散在多个宿主，怎么处理集合
+* 缓存问题，每个actor都有自己的状态，如何销毁，怎么知道是否已销毁。
+* 分布式问题：分布式一致性
+* mailbox堆积问题
 
-[Golang 垃圾回收剖析](http://legendtkl.com/2017/04/28/golang-gc/)
+适用场景：
+* rpc,actor位置透明化
+* 单线程异步，资源竞争类，比如秒杀
+* 负载均衡，动态扩容
+
+### 9 栈帧 帧边界frame boundaries
+
+函数调用后，并没必要立即清理栈空间，再次函数调用时，内存被再次用到，初始化的时候，接受新的拷贝值，清理旧值。
+所有的变量至少会被初始化为相应类型的零值。
+
+但是使用的指针，就意味着共享，或者叫间接访问内存了。
